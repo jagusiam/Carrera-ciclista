@@ -1,36 +1,40 @@
-package contrarreloj;
+package contrarrelojv2;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Corredor {
-    
-    // atributos
+/**
+ * La clase corredor en la cual se manejan los corredores. 
+ * @author aga
+ */
+
+public class CorredorV2 {
+      // atributos
     int dorsal;
     String nombre;
     String equipo;
     String pais;
 
     // metodo constructor
-    public Corredor(int dorsal, String nombre, String equipo, String pais) {
-
+    public CorredorV2(int dorsal, String nombre, String equipo, String pais) {
         this.dorsal = dorsal;
         this.nombre = nombre;
         this.equipo = equipo;
         this.pais = pais;
-
     }
 
-    public static void mostrarDatos(Corredor aaa[]) {
+    //método para mostrar datos de Corredores - desde un array de objetos
+    public static void mostrarDatos(CorredorV2 aaa[]) {
 
         for (int d = 0; d < aaa.length; d++) {
             System.out.println(" * - * - * - * ");
             System.out.println("Corredor : " + aaa[d].dorsal + " >> " + aaa[d].nombre + " >> " + aaa[d].equipo + " >> " + aaa[d].pais);
         }
         System.out.println(" * - * - * - * ");
-
     }
 
-    public static void cargarDatos(Corredor aaa[]) {
+    //método para cargar datos de Corredores en un array de objetos
+    public static void cargarDatos(CorredorV2 aaa[]) {
         //Corredor uno; se pueden pedir que se tecleen los datos de los corredores
         //Corredor uno = new Corredor(dorsal, nombre, equipo, pais)
         /*int dorsal = 10;
@@ -42,22 +46,24 @@ public class Corredor {
 
         aaa[0] = uno;*/
         
-        
         //o podemos generalo así
-        aaa[0] = new Corredor(10, "Peter", "Saxo", "Eslovenia");
-        aaa[1] = new Corredor(20, "Alberto", "Trek", "España");
-        aaa[2] = new Corredor(30, "Joaquin", "Movistar", "Eslovenia");
-        aaa[3] = new Corredor(40, "Alejandro", "Euskatel", "España");
-        aaa[4] = new Corredor(50, "Nairo", "Movistar", "Colombia");
-        aaa[5] = new Corredor(60, "Cadel", "Sky", "Eslovenia");
-
+        aaa[0] = new CorredorV2(10, "Peter", "Saxo", "Eslovenia");
+        aaa[1] = new CorredorV2(20, "Alberto", "Trek", "España");
+        aaa[2] = new CorredorV2(30, "Joaquin", "Movistar", "Eslovenia");
+        aaa[3] = new CorredorV2(40, "Alejandro", "Euskatel", "España");
+        aaa[4] = new CorredorV2(50, "Nairo", "Movistar", "Colombia");
+        aaa[5] = new CorredorV2(60, "Cadel", "Sky", "Eslovenia");
     }
 
+    //método para mostrar el menu de opciones
     public static int menu() {
-
-        int leido;
-        Scanner entradaTeclado = new Scanner(System.in);
-
+        int leido = -1;
+        Scanner entradaTeclado = new Scanner(System.in);   
+    
+    /* se introduce a mayores el control de excepcion, por si el usuario teclea 
+        un String en vez de un int, para que el programa no se pare, sino que 
+        imprima un mensaje de error */   
+    try {    
         System.out.println(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ");
         System.out.println("1 : Mostrar la clasificación ");
         System.out.println("2 : ");
@@ -65,14 +71,24 @@ public class Corredor {
         System.out.println("5 : ");
         System.out.println("7 : Mostrar los corredores participantes ");
         System.out.println("8 : Mostrar los datos de un corredor ");
-        System.out.println("9 : ");
+        System.out.println("9 : Mostrar los datos de un equipo");
         System.out.println("99 : Salir");
 
         leido = entradaTeclado.nextInt();
-        return (leido);
-    } // fin del método menu
-
-    public static void mostrarUno(int dorsal, Corredor aaa[]) {
+        
+    }  catch (InputMismatchException ex) {
+        /* El programa imprime un mensaje de error y vuelve a mostrar las 
+        opciones a escoger*/    
+        System.out.println("Ha introduciodo valor incorrecto. Por favor "
+                    + "intoduzca una opción válida de la lista");
+    }   
+        
+    return leido;  
+        
+    }  // fin del método menu
+    
+    
+    public static void mostrarUno(int dorsal, CorredorV2 aaa[]) {
 
         // muestra los datos de un corredor
         for (int i = 0; i < aaa.length; i++) {
@@ -81,7 +97,8 @@ public class Corredor {
         }
     }
 
-    public static String buscaN (int dorsal, Corredor aaa []) {
+    
+    public static String buscaN (int dorsal, CorredorV2 aaa []) {
         /*busca el nombre a partir de un dorsal */
         String nombre = " ";
         for (int i=0; i<aaa.length; i++) {
@@ -91,7 +108,8 @@ public class Corredor {
         return nombre;
     }
     
-    public static String buscaE (int dorsal, Corredor aaa[]) {
+    
+    public static String buscaE (int dorsal, CorredorV2 aaa[]) {
         //busca el equipo a partir de un dorsal
         String equipo = " ";
         for (int i=0; i<aaa.length; i++) {
@@ -102,4 +120,35 @@ public class Corredor {
     }
     
     
-}
+    //método que muestra datos de un equipo
+    public static void infoEquipo (CorredorV2 aaa[]) {
+        String equipo;
+        Scanner entrada = new Scanner(System.in);
+
+        System.out.println(" ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ");
+        System.out.println("Escribe el nombre del equipo de entre los siguientes: ");
+        System.out.println("Euskatel <<>> Movistar <<>> Saxo <<>> Sky <<>> Trek");
+        equipo = entrada.nextLine();
+        
+        System.out.println("DATOS DEL EQUIPO SELECCIONADO:");
+        System.out.println("CORREDORES: ");
+        int encontrado = 0;
+        int p=-1;
+        
+        for (int i = 0; i<aaa.length; i++) {
+            if (equipo.equals(aaa[i].equipo)) {
+                System.out.println("Nombre: " + aaa[i].nombre + " <<>> País: " + aaa[i].pais);
+                encontrado = 1;
+                p = i;
+            }
+        }
+        
+        if (encontrado == 1) {
+            System.out.println("Equipo: " + aaa[p].equipo);
+        }  else {
+            System.out.println("No existe un equipo con este nombre.");
+        }
+        
+    } //fin método infoEquipo
+      
+} //FIN DE LA CLASE
