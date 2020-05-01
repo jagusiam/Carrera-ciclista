@@ -1,67 +1,70 @@
-package contrarreloj;
+package contrarrelojv2;
 
 /**
- * declaramos aquí un nuevo objeto dorti  ( dorsal-tiempo)
- * y la tabla de clasificacion que es un array de dortis
+ * La clase dorti (dorsal-tiempo) donde se lleva la clasificación.
+ * @author aga
  */
-
-public class Dorti {
-// atributos
+public class DortiV2 {
+   // atributos
     int dorsal;
     int tiempo;
 
     // metodo constructor 
-    public Dorti(int dorsal, int tiempo) {
+    public DortiV2(int dorsal, int tiempo) {
         this.dorsal = dorsal;
         this.tiempo = tiempo;
     }
 
-    public static void inicializar(Dorti aaa[]) {
-
-        /* le paso un dorsal, un tiempo, y lo pone en el array de clasificacion en la última celda libre */
+    //inicializar el array de objetos de tipo DortiV2
+    public static void inicializar(DortiV2 aaa[]) {
+        /* le paso un dorsal, un tiempo, y lo pone en el array de clasificacion 
+        en la última celda libre */
         for (int i = 0; i < aaa.length; i++) {
 
-            aaa[i] = new Dorti(-1, 999999);
-
+            aaa[i] = new DortiV2(-1, 999999);
         }
     }
+    
+    //método para utilizar variable "tiempo" en el método de ordenación
+    public int getTiempo() {
+        return tiempo;
+    }
+    
+    
+    /* hay un error en este método, ya que en la primera posicion pone datos de
+    incializacion (-1, 999999) - no se actualiza, y en consecuencia no 
+    queda sitio para imprimir el ultimo corredor en llegar !!! - CORREGIDO */
+    public static int clasificar(int dorsal, int tiempo, DortiV2 aaa[], int llegados) {
 
-    public static int clasificar(int dorsal, int tiempo, Dorti aaa[], int llegados) {
-
-        /* le paso un dorsal, un tiempo, y lo pone en el array de clasificacion en la última celda libre */
+        /* le paso un dorsal, un tiempo, y lo pone en el array de clasificacion 
+        en la última celda libre */
         aaa[llegados].dorsal = dorsal;
 
         aaa[llegados].tiempo = tiempo;
 
-        /* ahora ordena el array por el tiempo , método de los jugadores de cartas 
+        /* ahora ordena el array por el tiempo, método de los jugadores de cartas 
         /* y devuelve en que puesto quedó */
         /* aun no está implementado la ordenación */ 
-        
-        
-        /*Ordenación del array[llegados] por la variable tiempo, usando el
-        método llamado de jugadores de cartas (o de inserción)*/
-        
-        
+                
+        /*Ordenación del array[] por la variable tiempo, usando el
+        método llamado de jugadores de cartas (o de inserción)*/        
         //variables auxiliares para ordenar el array
         int pos;
-        int aux;
-        
+         
         for (int i=0; i<aaa.length; i++) {
-            pos = i;
-            aux = aaa[i].tiempo;
-            while ((pos>0) && (aaa[pos-1].tiempo>aux)) {
-                aaa[pos] = aaa[pos-1];
-                pos--;
+            pos = i;//posición en la que estamos comparando
+            DortiV2 aux = aaa[i];//el  elemento que estamos comprobando
+            while ((pos>0) && (aaa[pos-1].getTiempo()>aux.getTiempo())) {
+                aaa[pos] = aaa[pos-1];//cambio
+                pos--;//desplazamiento a la izda en el array para seguir comprobando
             }
-            aaa[pos].tiempo = aux;    
+            aaa[pos] = aux;//refrescamos el valor del número actual y la pos. en la que quedó   
         }
-        
         return (llegados);
+    } //fin del método clasificar
 
-    }
-
-    public static void mostrarClasificacion(Dorti aaa[], int llegados) {
-
+    public static void mostrarClasificacion(DortiV2 aaa[], int llegados) {
+        //muestra la clasificación
         for (int p = 0; p < llegados; p ++) {
             System.out.println(" * - * - * - * ");
             System.out.println((p+1) +" : " + aaa[p].dorsal + " >> " + aaa[p].tiempo);
@@ -70,30 +73,29 @@ public class Dorti {
         
     }
     
-    public static int comprobarDorsal (int dorsal, Corredor acorredores[], Dorti clasificacion[]) {
+    /* método que comprueba el dorsal para saber si es válido - inscrito o si el 
+    corredor ya ha llegado */
+    public static int comprobarDorsal (int dorsal, CorredorV2 acorredores[], DortiV2 clasificacion[]) {
         int valido = 0;
         boolean inscrito = false;
         boolean anotado = false;
         
         //se comprueba que es un dorsal de un corredor que está inscrito
-        for (Corredor aux : acorredores) {
+        for (CorredorV2 aux : acorredores) {
             if (aux.dorsal == dorsal) inscrito = true;
         }
         
         //se comprueba si ese dorsal ya está anotado como llegado
-        for (Dorti aux : clasificacion) {
+        for (DortiV2 aux : clasificacion) {
             if (aux.dorsal == dorsal) anotado = true;
-            
         }
         
         if (inscrito && !anotado) valido = 0; //OK
         if (!inscrito) valido = 1;
         if (inscrito && anotado) valido = 2;
-        
-        
+    
         return (valido);
             
-    }    
-        
- 
-}
+    } //fin del método comprobarDorsal
+    
+} //FIN DE LA CLASE
